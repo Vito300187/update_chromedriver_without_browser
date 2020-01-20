@@ -9,7 +9,10 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  nokogiri
+  nokogiri!
+
+RUBY VERSION
+   ruby 2.4.1p111
 
 BUNDLED WITH
    2.1.2
