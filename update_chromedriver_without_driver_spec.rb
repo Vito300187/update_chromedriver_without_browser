@@ -2,13 +2,14 @@ require 'net/http'
 require 'open-uri'
 require 'nokogiri'
 
+os = ENV['OS'].downcase.strip
 zip_file_name = { 'mac' => 'chromedriver_mac64.zip', 'linux' => 'chromedriver_linux64.zip' }
 latest_version = Net::HTTP.get(URI('https://chromedriver.storage.googleapis.com/LATEST_RELEASE'))
 chromedriver_storage = 'https://chromedriver.storage.googleapis.com/'
 new_chromedriver_name = './chromedriver.zip'
 current_version = `chromedriver -v`.strip.split(' ').delete_if { |a| a.length > 20 }.last
 path_old_driver = `which chromedriver`.chomp
-link = "#{chromedriver_storage}#{latest_version}/#{zip_file_name['mac']}"
+link = "#{chromedriver_storage}#{latest_version}/#{zip_file_name[os]}"
 
 def unzip_chromedriver(new_file, old_file)
   File.delete(old_file) if File.exist?(old_file)
@@ -27,3 +28,4 @@ end
 
 compare_current_driver_and(current_version, latest_version)
 replace_chromedriver(new_chromedriver_name, link, path_old_driver)
+puts "Update chromedriver for #{os} successfully conducted"
