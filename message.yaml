@@ -1,0 +1,12 @@
+error:
+  not_os:
+    'You must specify the OS, for example => OS=mac ruby update_chromedriver_without_driver_spec.rb'
+  driver_not_found:
+    'start the installation last chromedriver version...'
+logging:
+  install_driver:
+    'A new version is being installed...'
+  update_is_not_required:
+    'Update is not required'
+  success_update:
+    'Update chromedriver successfully conducted'
