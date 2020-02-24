@@ -11,9 +11,9 @@ end
 
 def compare_current_driver_and(latest_version, current_version = nil)
   if current_version.nil?
-    puts @message['logging']['install_driver']
+    puts MESSAGE['logging']['install_driver']
   elsif current_version.eql?(latest_version)
-    abort(@message['logging']['update_is_not_required'])
+    abort(MESSAGE['logging']['update_is_not_required'])
   end
 end
 
@@ -23,9 +23,9 @@ def replace_chromedriver(new_chromedriver, link, path_old_driver)
   File.delete(new_chromedriver)
 end
 
-@message = YAML.safe_load(File.read('./message.yaml'))
+MESSAGE = YAML.safe_load(File.read('./message.yaml'))
 chrome_version = YAML.safe_load(File.read('./chrome_driver_v.yaml'))
-os = ENV['OS'].nil? ? (raise @message['error']['not_os']) : ENV['OS'].downcase.strip
+os = ENV['OS'].nil? ? (raise MESSAGE['error']['not_os']) : ENV['OS'].downcase.strip
 
 zip_file_name = chrome_version[os]
 latest_version = Net::HTTP.get(URI('https://chromedriver.storage.googleapis.com/LATEST_RELEASE'))
@@ -33,7 +33,7 @@ latest_version = Net::HTTP.get(URI('https://chromedriver.storage.googleapis.com/
 begin
   current_version = `chromedriver -v`.strip.split(' ').delete_if { |a| a.length > 20 }.last
 rescue StandardError => e
-  puts "#{e}, #{@message['error']['driver_not_found']}"
+  puts "#{e}, #{MESSAGE['error']['driver_not_found']}"
 end
 
 chromedriver_storage = 'https://chromedriver.storage.googleapis.com/'
@@ -44,4 +44,4 @@ link = "#{chromedriver_storage}#{latest_version}/#{zip_file_name}"
 
 compare_current_driver_and(latest_version, current_version)
 replace_chromedriver(new_chromedriver_name, link, path_old_driver)
-puts @message['logging']['success_update']
+puts MESSAGE['logging']['success_update']
