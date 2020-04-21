@@ -1,8 +1,23 @@
 # frozen_string_literal: true
 
-require 'yaml'
 require 'net/http'
 require 'open-uri'
+
+MESSAGE = {
+  'error' => {
+    'not_os' => 'You must specify the OS, for example => OS=mac ruby update_chromedriver_without_driver_spec.rb',
+    'driver_not_found' => 'start the installation last chromedriver version...'
+  },
+  'logging' => {
+    'install_driver' => 'A new version is being installed...',
+    'update_is_not_required' => 'Update is not required',
+    'success_update' => 'Update chromedriver successfully conducted'
+  }
+}
+CHROME_VERSION =  {
+  'mac' => 'chromedriver_mac64.zip',
+  'linux' => 'chromedriver_linux64.zip'
+}
 
 def unzip_chromedriver(new_file, old_file)
   File.delete(old_file) if File.exist?(old_file)
@@ -23,11 +38,8 @@ def replace_chromedriver(new_chromedriver, link, path_old_driver)
   File.delete(new_chromedriver)
 end
 
-MESSAGE = YAML.safe_load(File.read('./message.yaml'))
-chrome_version = YAML.safe_load(File.read('./chrome_driver_v.yaml'))
 os = ENV['OS'].nil? ? (raise MESSAGE['error']['not_os']) : ENV['OS'].downcase.strip
-
-zip_file_name = chrome_version[os]
+zip_file_name = CHROME_VERSION[os]
 latest_version = Net::HTTP.get(URI('https://chromedriver.storage.googleapis.com/LATEST_RELEASE'))
 
 begin
@@ -44,4 +56,4 @@ link = "#{chromedriver_storage}#{latest_version}/#{zip_file_name}"
 
 compare_current_driver_and(latest_version, current_version)
 replace_chromedriver(new_chromedriver_name, link, path_old_driver)
-puts MESSAGE['logging']['success_update']
+puts "#{MESSAGE['logging']['success_update']}, new version chromedriver #{latest_version}"
